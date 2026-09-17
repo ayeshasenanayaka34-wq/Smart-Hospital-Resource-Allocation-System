@@ -51,4 +51,6 @@ int wardCapacity[NUM_WARDS] = {
     10,
     5
 };
+
+int bedOccupancy[NUM_WARDS][MAX_BEDS];
 }
