@@ -31,4 +31,24 @@ int dailyPatientCap[NUM_SPECIALTIES] = {
     10
 };
 
+char wardName[NUM_WARDS][50] = {
+    "General Ward",
+    "Paediatric Ward",
+    "Surgical Ward",
+    "ICU"
+};
+
+double wardDailyRate[NUM_WARDS] = {
+    3000.00,
+    6000.00,
+    12000.00,
+    25000.00
+};
+
+int wardCapacity[NUM_WARDS] = {
+    20,
+    10,
+    10,
+    5
+};
 }
