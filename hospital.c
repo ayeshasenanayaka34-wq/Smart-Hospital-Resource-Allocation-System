@@ -161,6 +161,8 @@ void registerPatient(void)
         wardID[patientCount] = 0;
         daysAdmitted[patientCount] = 0;
     }
+    wardCost[patientCount] = calculateWardCost(patientCount);
+    grossTotal[patientCount] =calculateGrossTotal(patientCount);
     registrationOrder[patientCount] = patientCount + 1;
     queueCount[specialtyID[patientCount] - 1]++;
     patientCount++;
@@ -202,3 +204,22 @@ double calculateWaitingTime(int specialtyIndex)
 {
     return queueCount[specialtyIndex] * consultationTime[specialtyIndex];
 }
+
+double calculateWardCost(int patientIndex)
+{
+    if (admitted[patientIndex] == 1)
+    {
+        return daysAdmitted[patientIndex] *
+               wardDailyRate[wardID[patientIndex] - 1];
+    }
+
+    return 0.0;
+}
+
+double calculateGrossTotal(int patientIndex)
+{
+    return baseFee[patientIndex]
+           + surcharge[patientIndex]
+           + wardCost[patientIndex];
+}
+
