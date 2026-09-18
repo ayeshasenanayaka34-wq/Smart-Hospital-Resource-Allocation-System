@@ -8,6 +8,7 @@ int main(void)
     initializeBeds();
     displaySpecialties();
     displayWards();
+    registerPatient();
 
     return 0;
 }

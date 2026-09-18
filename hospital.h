@@ -9,5 +9,6 @@
 void initializeBeds(void);
 void displaySpecialties(void);
 void displayWards(void);
+void registerPatient(void);
 
 #endif
