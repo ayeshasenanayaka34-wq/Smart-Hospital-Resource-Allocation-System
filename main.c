@@ -9,6 +9,7 @@ int main(void)
     displaySpecialties();
     displayWards();
     registerPatient();
+    allocateBed(0);
 
     return 0;
 }
