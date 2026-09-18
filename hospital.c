@@ -2,6 +2,10 @@
 #include <string.h>
 #include "hospital.h"
 
+void initializeBeds(void);
+void displaySpecialties(void);
+void displayWards(void);
+
 char specialtyName[NUM_SPECIALTIES][50] = {
     "General Practice (OPD)",
     "Paediatrics",
@@ -52,6 +56,7 @@ int wardCapacity[NUM_WARDS] = {
 };
 
 int bedOccupancy[NUM_WARDS][MAX_BEDS];
+
 char patientName[MAX_PATIENTS][50];
 int patientAge[MAX_PATIENTS];
 int urgencyLevel[MAX_PATIENTS];
@@ -67,3 +72,50 @@ double grossTotal[MAX_PATIENTS];
 double discount[MAX_PATIENTS];
 double finalPayable[MAX_PATIENTS];
 double waitingTime[MAX_PATIENTS];
+
+
+void initializeBeds(void)
+{
+    int i, j;
+
+    for (i = 0; i < NUM_WARDS; i++)
+    {
+        for (j = 0; j < MAX_BEDS; j++)
+        {
+            bedOccupancy[i][j] = 0;
+        }
+    }
+}
+
+void displaySpecialties(void)
+{
+    int i;
+
+    printf("\nAvailable Specialties:\n");
+
+    for (i = 0; i < NUM_SPECIALTIES; i++)
+    {
+        printf("%d. %s - Rs. %.2f - %d min - Daily Cap: %d\n",
+               i + 1,
+               specialtyName[i],
+               consultationFee[i],
+               consultationTime[i],
+               dailyPatientCap[i]);
+    }
+}
+
+void displayWards(void)
+{
+    int i;
+
+    printf("\nAvailable Wards:\n");
+
+    for (i = 0; i < NUM_WARDS; i++)
+    {
+        printf("%d. %s - Rs. %.2f/day - Capacity: %d beds\n",
+               i + 1,
+               wardName[i],
+               wardDailyRate[i],
+               wardCapacity[i]);
+    }
+}

@@ -6,4 +6,8 @@
 #define NUM_WARDS 4
 #define MAX_BEDS 20
 
+void initializeBeds(void);
+void displaySpecialties(void);
+void displayWards(void);
+
 #endif
