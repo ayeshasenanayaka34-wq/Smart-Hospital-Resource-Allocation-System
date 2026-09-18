@@ -162,3 +162,33 @@ void registerPatient(void)
     
     printf("\nPatient registered successfully.\n");
 }
+
+void allocateBed(int patientIndex)
+{
+    int wardIndex;
+    int bedIndex;
+
+    if (admitted[patientIndex] == 0)
+    {
+        wardID[patientIndex] = 0;
+        return;
+    }
+
+    wardIndex = wardID[patientIndex] - 1;
+
+    for (bedIndex = 0; bedIndex < wardCapacity[wardIndex]; bedIndex++)
+    {
+        if (bedOccupancy[wardIndex][bedIndex] == 0)
+        {
+            bedOccupancy[wardIndex][bedIndex] = 1;
+
+            printf("Bed allocated: Ward %d, Bed %d\n",
+                   wardID[patientIndex],
+                   bedIndex + 1);
+
+            return;
+        }
+    }
+
+    printf("No available bed in the selected ward.\n");
+}
