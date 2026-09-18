@@ -10,6 +10,7 @@ int main(void)
     displayWards();
     registerPatient();
     allocateBed(0);
+    displayPatientBill(0);
 
     return 0;
 }
