@@ -34,6 +34,8 @@ int dailyPatientCap[NUM_SPECIALTIES] = {
     10
 };
 
+int queueCount[NUM_SPECIALTIES] = {0, 0, 0, 0};
+
 char wardName[NUM_WARDS][50] = {
     "General Ward",
     "Paediatric Ward",
@@ -137,6 +139,9 @@ void registerPatient(void)
     printf("Enter Specialty ID (1-4): ");
     scanf("%d", &specialtyID[patientCount]);
 
+    waitingTime[patientCount] =
+    calculateWaitingTime(specialtyID[patientCount] - 1);
+
     printf("Is the patient admitted? (1-Yes, 0-No): ");
     scanf("%d", &admitted[patientCount]);
     
@@ -157,7 +162,7 @@ void registerPatient(void)
         daysAdmitted[patientCount] = 0;
     }
     registrationOrder[patientCount] = patientCount + 1;
-    
+    queueCount[specialtyID[patientCount] - 1]++;
     patientCount++;
     
     printf("\nPatient registered successfully.\n");
@@ -191,4 +196,9 @@ void allocateBed(int patientIndex)
     }
 
     printf("No available bed in the selected ward.\n");
+}
+
+double calculateWaitingTime(int specialtyIndex)
+{
+    return queueCount[specialtyIndex] * consultationTime[specialtyIndex];
 }

@@ -11,5 +11,6 @@ void displaySpecialties(void);
 void displayWards(void);
 void registerPatient(void);
 void allocateBed(int patientIndex);
+double calculateWaitingTime(int specialtyIndex);
 
 #endif
