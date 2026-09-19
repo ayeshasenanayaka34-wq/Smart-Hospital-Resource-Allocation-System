@@ -1,0 +1,10 @@
+Patient ID: PAT-1001 | Name: ayesha | Age: 67 | Specialty: General Practice (OPD) | Final Bill: LKR 9180.00
+Patient ID: PAT-1001 | Name: ayesha | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 7500.00
+Patient ID: PAT-1001 | Name: ayesha | Age: 32 | Specialty: General Practice (OPD) | Final Bill: LKR 4800.00
+Patient ID: PAT-1002 | Name: asela | Age: 12 | Specialty: General Practice (OPD) | Final Bill: LKR 4500.00
+Patient ID: PAT-1003 | Name: amaya | Age: 34 | Specialty: Paediatrics | Final Bill: LKR 3750.00
+Patient ID: PAT-1004 | Name: aa | Age: 4 | Specialty: General Practice (OPD) | Final Bill: LKR 1275.00
+Patient ID: PAT-1005 | Name: sd | Age: 2 | Specialty: General Practice (OPD) | Final Bill: LKR 1275.00
+Patient ID: PAT-1001 | Name: as | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 13500.00
+Patient ID: PAT-1001 | Name: ayehsa | Age: 21 | Specialty: Paediatrics | Final Bill: LKR 14500.00
+Patient ID: PAT-1001 | Name: ayesha | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 7500.00

@@ -145,32 +145,78 @@ void registerPatient(void)
     printf("Enter Age: ");
     scanf("%d", &patientAge[patientCount]);
 
-    printf("Enter Urgency Level (1-Normal, 2-Urgent, 3-Critical): ");
-    scanf("%d", &urgencyLevel[patientCount]);
+    do
+    {
+        printf("Enter Urgency Level (1-Normal, 2-Urgent, 3-Critical): ");
+        scanf("%d", &urgencyLevel[patientCount]);
+        
+        if (urgencyLevel[patientCount] < 1 || urgencyLevel[patientCount] > 3)
+        {
+            printf("Invalid urgency level. Please enter 1, 2, or 3.\n");
+        }
+    } while (urgencyLevel[patientCount] < 1 || urgencyLevel[patientCount] > 3);
 
     displaySpecialties();
 
-    printf("Enter Specialty ID (1-4): ");
-    scanf("%d", &specialtyID[patientCount]);
+    do
+    {
+        printf("Enter Specialty ID (1-4): ");
+        scanf("%d", &specialtyID[patientCount]);
+        
+        if (specialtyID[patientCount] < 1 || specialtyID[patientCount] > 4)
+        {
+            printf("Invalid specialty ID. Please enter 1-4.\n");
+        }
+    } while (specialtyID[patientCount] < 1 || specialtyID[patientCount] > 4);
 
     baseFee[patientCount] = consultationFee[specialtyID[patientCount] - 1];
     surcharge[patientCount] = calculateSurcharge(patientCount);
     waitingTime[patientCount] = calculateWaitingTime(specialtyID[patientCount] - 1);
 
-    printf("Is the patient admitted? (1-Yes, 0-No): ");
-    scanf("%d", &admitted[patientCount]);
+    do
+    {
+        printf("Is the patient admitted? (1-Yes, 0-No): ");
+        scanf("%d", &admitted[patientCount]);
+
+        if (admitted[patientCount] != 0 && admitted[patientCount] != 1)
+        {
+            printf("Invalid input. Please enter 1 or 0.\n");
+        }
+    } while (admitted[patientCount] != 0 && admitted[patientCount] != 1);
     
 
     if (admitted[patientCount] == 1)
     {
         displayWards();
         
-        printf("Enter Ward ID (1-4): ");
-        scanf("%d", &wardID[patientCount]);
+        do
+        {
+            printf("Enter Ward ID (1-4): ");
+            scanf("%d", &wardID[patientCount]);
+            
+            if (wardID[patientCount] < 1 || wardID[patientCount] > 4)
+            {
+                printf("Invalid ward ID. Please enter 1-4.\n");
+            }
+            else if (queueCount[specialtyID[patientCount] - 1] >= dailyPatientCap[specialtyID[patientCount] - 1])
+            {
+                printf("Daily patient cap reached for this specialty.\n");
+            }
 
-        printf("Enter Number of Days Admitted: ");
-        scanf("%d", &daysAdmitted[patientCount]);
+        } while (wardID[patientCount] < 1 || wardID[patientCount] > 4);
+
+        do
+        {
+            printf("Enter Number of Days Admitted: ");
+            scanf("%d", &daysAdmitted[patientCount]);
+            
+            if (daysAdmitted[patientCount] < 1)
+            {
+                printf("Invalid number of days. Please enter at least 1.\n");
+            }
+        } while (daysAdmitted[patientCount] < 1);
     }
+
     else
     { 
         wardID[patientCount] = 0;
@@ -317,4 +363,180 @@ void displayPatientBill(int patientIndex)
     printf("Final Payable Amount     : LKR %.2f\n", finalPayable[patientIndex]);
     printf("Estimated Waiting Time   : %.2f mins\n", waitingTime[patientIndex]);
     printf("================================================\n");
+}
+void generateReport(void)
+{
+    int i, j;
+    int criticalCount = 0;
+    int urgentCount = 0;
+    int normalCount = 0;
+
+    double totalRevenue = 0.0;
+    double totalDiscount = 0.0;
+
+    int highestPatientIndex = -1;
+    double highestBill = 0.0;
+
+    printf("\n========================================\n");
+    printf("       SMART HOSPITAL REPORT\n");
+    printf("========================================\n");
+
+    /* Patient urgency counts and financial totals */
+    for (i = 0; i < patientCount; i++)
+    {
+        if (urgencyLevel[i] == 3)
+        {
+            criticalCount++;
+        }
+        else if (urgencyLevel[i] == 2)
+        {
+            urgentCount++;
+        }
+        else if (urgencyLevel[i] == 1)
+        {
+            normalCount++;
+        }
+
+        totalRevenue += finalPayable[i];
+        totalDiscount += discount[i];
+
+        /* Find highest-paying patient */
+        if (i == 0 || finalPayable[i] > highestBill)
+        {
+            highestBill = finalPayable[i];
+            highestPatientIndex = i;
+        }
+    }
+
+    printf("\nPatient Summary\n");
+    printf("----------------------------------------\n");
+    printf("Critical Patients : %d\n", criticalCount);
+    printf("Urgent Patients   : %d\n", urgentCount);
+    printf("Normal Patients   : %d\n", normalCount);
+
+    printf("\nFinancial Summary\n");
+    printf("----------------------------------------\n");
+    printf("Total Revenue     : LKR %.2f\n", totalRevenue);
+    printf("Total Discounts   : LKR %.2f\n", totalDiscount);
+
+    printf("\nWard Occupancy\n");
+    printf("----------------------------------------\n");
+
+    for (i = 0; i < NUM_WARDS; i++)
+    {
+        int occupiedBeds = 0;
+        double occupancyPercentage;
+
+        for (j = 0; j < wardCapacity[i]; j++)
+        {
+            if (bedOccupancy[i][j] == 1)
+            {
+                occupiedBeds++;
+            }
+        }
+
+        occupancyPercentage =
+            (occupiedBeds / (double)wardCapacity[i]) * 100.0;
+
+        printf("%s : %.2f%% (%d/%d beds)\n",
+               wardName[i],
+               occupancyPercentage,
+               occupiedBeds,
+               wardCapacity[i]);
+    }
+
+    printf("\nHighest-Paying Patient\n");
+    printf("----------------------------------------\n");
+
+    if (highestPatientIndex != -1)
+    {
+        printf("Patient Name : %s\n",
+               patientName[highestPatientIndex]);
+
+        printf("Patient ID   : PAT-%d\n",
+               1001 + highestPatientIndex);
+
+        printf("Total Bill   : LKR %.2f\n",
+               finalPayable[highestPatientIndex]);
+    }
+    else
+    {
+        printf("No patients registered.\n");
+    }
+
+    printf("========================================\n");
+}
+
+void saveBedStatus(void)
+{
+    FILE *file;
+    int i, j;
+
+    file = fopen("beds_status.txt", "w");
+
+    if (file == NULL)
+    {
+        printf("Unable to save bed status.\n");
+        return;
+    }
+
+    for (i = 0; i < NUM_WARDS; i++)
+    {
+        for (j = 0; j < wardCapacity[i]; j++)
+        {
+            fprintf(file, "%d ", bedOccupancy[i][j]);
+        }
+
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+}
+
+
+void loadBedStatus(void)
+{
+    FILE *file;
+    int i, j;
+
+    file = fopen("beds_status.txt", "r");
+
+    if (file == NULL)
+    {
+        return;
+    }
+
+    for (i = 0; i < NUM_WARDS; i++)
+    {
+        for (j = 0; j < wardCapacity[i]; j++)
+        {
+            fscanf(file, "%d", &bedOccupancy[i][j]);
+        }
+    }
+
+    fclose(file);
+}
+
+
+void savePatientRecord(int patientIndex)
+{
+    FILE *file;
+
+    file = fopen("patient_records.txt", "a");
+
+    if (file == NULL)
+    {
+        printf("Unable to save patient record.\n");
+        return;
+    }
+
+    fprintf(file,
+            "Patient ID: PAT-%d | Name: %s | Age: %d | Specialty: %s | Final Bill: LKR %.2f\n",
+            1001 + patientIndex,
+            patientName[patientIndex],
+            patientAge[patientIndex],
+            specialtyName[specialtyID[patientIndex] - 1],
+            finalPayable[patientIndex]);
+
+    fclose(file);
 }
