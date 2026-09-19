@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include "hospital.h"
 
 void initializeBeds(void);
@@ -68,6 +67,23 @@ int admitted[MAX_PATIENTS];
 int daysAdmitted[MAX_PATIENTS];
 int registrationOrder[MAX_PATIENTS];
 int patientCount = 0;
+int getPatientCount(void)
+{
+    return patientCount;
+}
+int findPatientByID(int patientID)
+{
+    int patientIndex;
+
+    patientIndex = patientID - 1001;
+
+    if (patientIndex >= 0 && patientIndex < patientCount)
+    {
+        return patientIndex;
+    }
+
+    return -1;
+}
 double baseFee[MAX_PATIENTS];
 double surcharge[MAX_PATIENTS];
 double wardCost[MAX_PATIENTS];
@@ -118,6 +134,8 @@ void displayWards(void)
         printf("%d. %s - Rs. %.2f/day - Capacity: %d beds\n",i + 1, wardName[i], wardDailyRate[i], wardCapacity[i]);
     }
 }
+
+double calculateSurcharge(int patientIndex);
 
 void registerPatient(void)
 {
