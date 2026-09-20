@@ -8,3 +8,12 @@ Patient ID: PAT-1005 | Name: sd | Age: 2 | Specialty: General Practice (OPD) | F
 Patient ID: PAT-1001 | Name: as | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 13500.00
 Patient ID: PAT-1001 | Name: ayehsa | Age: 21 | Specialty: Paediatrics | Final Bill: LKR 14500.00
 Patient ID: PAT-1001 | Name: ayesha | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 7500.00
+Patient ID: PAT-1001 | Name: drt | Age: 32 | Specialty: Paediatrics | Final Bill: LKR 8500.00
+Patient ID: PAT-1002 | Name: A | Age: 21 | Specialty: General Practice (OPD) | Final Bill: LKR 4500.00
+Patient ID: PAT-1003 | Name: B | Age: 32 | Specialty: General Practice (OPD) | Final Bill: LKR 5250.00
+Patient ID: PAT-1004 | Name: C | Age: 34 | Specialty: General Practice (OPD) | Final Bill: LKR 4800.00
+Patient ID: PAT-1001 | Name: dd | Age: 1 | Specialty: General Practice (OPD) | Final Bill: LKR 3825.00
+Patient ID: PAT-1001 | Name: kamal | Age: 25 | Specialty: Cardiology | Final Bill: LKR 30750.00
+Patient ID: PAT-1001 | Name: nimal | Age: 30 | Specialty: General Practice (OPD) | Final Bill: LKR 1500.00
+Patient ID: PAT-1002 | Name: amal  | Age: 40 | Specialty: Paediatrics | Final Bill: LKR 3750.00
+Patient ID: PAT-1003 | Name: sman | Age: 70 | Specialty: General Practice (OPD) | Final Bill: LKR 1530.00
