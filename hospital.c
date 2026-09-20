@@ -181,8 +181,9 @@ void registerPatient(void)
         {
             printf("Daily patient cap reached for this specialty.\n");
         }
-
-    } while (specialtyID[patientCount] < 1 || specialtyID[patientCount] > 4 ||
+    
+    } while (specialtyID[patientCount] < 1 ||
+         specialtyID[patientCount] > 4 ||
          queueCount[specialtyID[patientCount] - 1] >=
          dailyPatientCap[specialtyID[patientCount] - 1]);
 
@@ -274,6 +275,11 @@ void allocateBed(int patientIndex)
         }
     }
     printf("No available bed in the selected ward.\n");
+    printf("Patient will be registered as an outpatient.\n");
+    admitted[patientIndex] = 0;
+    wardID[patientIndex] = 0;
+    daysAdmitted[patientIndex] = 0;
+    bedNumber[patientIndex] = 0;
 }
 
 double calculateWaitingTime(int specialtyIndex)
