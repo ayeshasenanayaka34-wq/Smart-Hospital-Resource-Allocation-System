@@ -21,7 +21,8 @@ int main(void)
         printf("3. Display Specialties\n");
         printf("4. Display Wards\n");
         printf("5. Generate Report\n");
-        printf("6. Exit\n");
+        printf("6. Sort Patients by Priority\n");
+        printf("7. Exit\n");
         printf("==============================\n");
 
         printf("Enter your choice: ");
@@ -33,7 +34,6 @@ int main(void)
 
             patientIndex = getPatientCount() - 1;
 
-            allocateBed(patientIndex);
             saveBedStatus();
 
             displayPatientBill(patientIndex);
@@ -71,6 +71,11 @@ int main(void)
         }
         else if (choice == 6)
         {
+            sortPatientsByPriority();
+            printf("Patients sorted by priority successfully.\n");
+        }
+        else if (choice == 7)
+        {
             saveBedStatus();
             printf("Exiting Smart Hospital System...\n");
         }
@@ -79,7 +84,7 @@ int main(void)
             printf("Invalid choice. Please try again.\n");
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 
     return 0;
 }

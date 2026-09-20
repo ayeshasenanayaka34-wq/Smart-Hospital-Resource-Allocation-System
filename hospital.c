@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "hospital.h"
 
 void initializeBeds(void);
@@ -57,7 +58,7 @@ int wardCapacity[NUM_WARDS] = {
 };
 
 int bedOccupancy[NUM_WARDS][MAX_BEDS];
-
+int patientID[MAX_PATIENTS];
 char patientName[MAX_PATIENTS][50];
 int patientAge[MAX_PATIENTS];
 int urgencyLevel[MAX_PATIENTS];
@@ -71,19 +72,21 @@ int getPatientCount(void)
 {
     return patientCount;
 }
-int findPatientByID(int patientID)
+int findPatientByID(int id)
 {
-    int patientIndex;
+    int i;
 
-    patientIndex = patientID - 1001;
-
-    if (patientIndex >= 0 && patientIndex < patientCount)
+    for (i = 0; i < patientCount; i++)
     {
-        return patientIndex;
+        if (patientID[i] == id)
+        {
+            return i;
+        }
     }
 
     return -1;
 }
+
 double baseFee[MAX_PATIENTS];
 double surcharge[MAX_PATIENTS];
 double wardCost[MAX_PATIENTS];
@@ -139,6 +142,13 @@ double calculateSurcharge(int patientIndex);
 
 void registerPatient(void)
 {
+    if (patientCount >= MAX_PATIENTS)
+    {
+        printf("Maximum patient limit reached.\n");
+        return;
+    }
+    patientID[patientCount] = 1001 + patientCount;
+    
     printf("\nEnter Patient Name: ");
     scanf(" %[^\n]", patientName[patientCount]);
 
@@ -167,7 +177,14 @@ void registerPatient(void)
         {
             printf("Invalid specialty ID. Please enter 1-4.\n");
         }
-    } while (specialtyID[patientCount] < 1 || specialtyID[patientCount] > 4);
+        else if (queueCount[specialtyID[patientCount] - 1] >= dailyPatientCap[specialtyID[patientCount] - 1])
+        {
+            printf("Daily patient cap reached for this specialty.\n");
+        }
+
+    } while (specialtyID[patientCount] < 1 || specialtyID[patientCount] > 4 ||
+         queueCount[specialtyID[patientCount] - 1] >=
+         dailyPatientCap[specialtyID[patientCount] - 1]);
 
     baseFee[patientCount] = consultationFee[specialtyID[patientCount] - 1];
     surcharge[patientCount] = calculateSurcharge(patientCount);
@@ -198,10 +215,6 @@ void registerPatient(void)
             {
                 printf("Invalid ward ID. Please enter 1-4.\n");
             }
-            else if (queueCount[specialtyID[patientCount] - 1] >= dailyPatientCap[specialtyID[patientCount] - 1])
-            {
-                printf("Daily patient cap reached for this specialty.\n");
-            }
 
         } while (wardID[patientCount] < 1 || wardID[patientCount] > 4);
 
@@ -215,6 +228,8 @@ void registerPatient(void)
                 printf("Invalid number of days. Please enter at least 1.\n");
             }
         } while (daysAdmitted[patientCount] < 1);
+        
+        allocateBed(patientCount);
     }
 
     else
@@ -315,9 +330,9 @@ double calculateFinalPayable(int patientIndex)
 void displayPatientBill(int patientIndex)
 {
     printf("\n==============================================\n");
-    printf("\n      SMART HOSPITAL ACMISSION & BILL\n");
+    printf("\n      SMART HOSPITAL ADMISSION & BILL\n");
     printf("\n----------------------------------------------\n");
-    printf("Patient ID               : PAT-%d\n", 1001 + patientIndex);
+    printf("Patient ID               : PAT-%d\n", patientID[patientIndex]);
     printf("Patient Name             : %s\n", patientName[patientIndex]);
     printf("Age                      : %d\n", patientAge[patientIndex]);
     printf("Specialty                : %s\n", specialtyName[specialtyID[patientIndex] - 1]);
@@ -450,14 +465,9 @@ void generateReport(void)
 
     if (highestPatientIndex != -1)
     {
-        printf("Patient Name : %s\n",
-               patientName[highestPatientIndex]);
-
-        printf("Patient ID   : PAT-%d\n",
-               1001 + highestPatientIndex);
-
-        printf("Total Bill   : LKR %.2f\n",
-               finalPayable[highestPatientIndex]);
+        printf("Patient Name : %s\n", patientName[highestPatientIndex]);
+        printf("Patient ID   : PAT-%d\n", patientID[highestPatientIndex]);
+        printf("Total Bill   : LKR %.2f\n", finalPayable[highestPatientIndex]);
     }
     else
     {
@@ -532,11 +542,100 @@ void savePatientRecord(int patientIndex)
 
     fprintf(file,
             "Patient ID: PAT-%d | Name: %s | Age: %d | Specialty: %s | Final Bill: LKR %.2f\n",
-            1001 + patientIndex,
+            patientID[patientIndex],
             patientName[patientIndex],
             patientAge[patientIndex],
             specialtyName[specialtyID[patientIndex] - 1],
             finalPayable[patientIndex]);
 
     fclose(file);
+}
+void sortPatientsByPriority(void)
+{
+    int i, j;
+    int tempInt;
+    double tempDouble;
+    char tempName[50];
+
+    for (i = 0; i < patientCount - 1; i++)
+    {
+        for (j = i + 1; j < patientCount; j++)
+        {
+            if (urgencyLevel[i] < urgencyLevel[j] ||
+                (urgencyLevel[i] == urgencyLevel[j] &&
+                 registrationOrder[i] > registrationOrder[j]))
+            {
+                /* Swap patient name */
+                strcpy(tempName, patientName[i]);
+                strcpy(patientName[i], patientName[j]);
+                strcpy(patientName[j], tempName);
+
+                /* Swap integer data */
+                tempInt = patientID[i];
+                patientID[i] = patientID[j];
+                patientID[j] = tempInt;
+
+                tempInt = patientAge[i];
+                patientAge[i] = patientAge[j];
+                patientAge[j] = tempInt;
+
+                tempInt = urgencyLevel[i];
+                urgencyLevel[i] = urgencyLevel[j];
+                urgencyLevel[j] = tempInt;
+
+                tempInt = specialtyID[i];
+                specialtyID[i] = specialtyID[j];
+                specialtyID[j] = tempInt;
+
+                tempInt = wardID[i];
+                wardID[i] = wardID[j];
+                wardID[j] = tempInt;
+
+                tempInt = admitted[i];
+                admitted[i] = admitted[j];
+                admitted[j] = tempInt;
+
+                tempInt = daysAdmitted[i];
+                daysAdmitted[i] = daysAdmitted[j];
+                daysAdmitted[j] = tempInt;
+
+                tempInt = registrationOrder[i];
+                registrationOrder[i] = registrationOrder[j];
+                registrationOrder[j] = tempInt;
+
+                tempInt = bedNumber[i];
+                bedNumber[i] = bedNumber[j];
+                bedNumber[j] = tempInt;
+
+                /* Swap double data */
+                tempDouble = baseFee[i];
+                baseFee[i] = baseFee[j];
+                baseFee[j] = tempDouble;
+
+                tempDouble = surcharge[i];
+                surcharge[i] = surcharge[j];
+                surcharge[j] = tempDouble;
+
+                tempDouble = wardCost[i];
+                wardCost[i] = wardCost[j];
+                wardCost[j] = tempDouble;
+
+                tempDouble = grossTotal[i];
+                grossTotal[i] = grossTotal[j];
+                grossTotal[j] = tempDouble;
+
+                tempDouble = discount[i];
+                discount[i] = discount[j];
+                discount[j] = tempDouble;
+
+                tempDouble = finalPayable[i];
+                finalPayable[i] = finalPayable[j];
+                finalPayable[j] = tempDouble;
+
+                tempDouble = waitingTime[i];
+                waitingTime[i] = waitingTime[j];
+                waitingTime[j] = tempDouble;
+            }
+        }
+    }
 }
